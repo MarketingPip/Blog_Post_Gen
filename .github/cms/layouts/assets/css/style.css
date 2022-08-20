@@ -982,3 +982,97 @@ breadcrumbs li + li::before {
     color: var(--breadcrumbs-divider-color, #ccc);
     white-space: pre;
 }
+
+
+
+
+/* Search Result Tabs + Page */
+
+#SearchResultsTitle {
+ opacity: 0.6;
+}
+
+.tabs > a:target + a + div,
+.tabs > div:last-child {
+  display: block;
+}
+.tabs > div,
+.tabs > a:target + a + div ~ div {
+  display: none;
+}
+
+
+/* layout */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1em 0;
+}
+.tabs > div {
+  order: 1;
+  width: 100%;
+ 
+}
+.tabs > a:last-of-type {
+  order: -1;
+}
+
+
+
+.tabs  > a {
+
+}
+
+.tabs > div {
+ 
+  padding: 0.5em 1em;
+ margin-top:50px;
+ 
+}
+.tabs > a {
+  text-decoration: none;
+  padding: 0.5em 1.5em;
+  border: 1px solid transparent;
+  border-top-width: 3px;
+  font-weight: bold;
+  color: #999;
+  z-index: 1;
+    
+}
+
+/* links highlight */
+.tabs > a:hover,
+.tabs > a:target + a ~ a:hover {
+  color: #666;
+}
+.tabs > a:target + a,
+.tabs > a:last-of-type {
+  color: #000;
+  
+ 
+}
+.tabs > a:target + a ~ a {
+  background-color: transparent;
+  border-color: transparent;
+  color: #bbb;
+  
+}
+
+
+.tabs > a:target + a, .tabs > a:last-of-type {
+  border-bottom: 1px solid rgba(41, 41, 41, 1);
+}
+
+.tag {
+margin: 0 2px;
+    padding: 8px 16px;
+color: black;
+
+    background-color: rgba(242, 242, 242, 1);
+font-size: 80%;
+font-family: sans-serif;
+text-decoration: none;
+text-transform: uppercase;
+ border-radius:20px;
+}
+
