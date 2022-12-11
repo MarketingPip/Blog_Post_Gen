@@ -606,7 +606,7 @@ for file in getListOfFiles(dirName):
     except:
     # If no settings - get the whole file contents		
       blog_content = f.read()
-    content['Blog_Content_Key'] = str(blog_content)
+    content['Blog_Content_Key'] = blog_content
     globals().update(content)
    # file_contents = f.read()
     Facebook_Meta = ""
@@ -620,7 +620,7 @@ for file in getListOfFiles(dirName):
     data = var 
 
     try:
-      Blog_Contents = content["Blog_Content_Key"]
+      Blog_Contents = content['Blog_Content_Key']
     except:
       Blog_Contents = ""
 
