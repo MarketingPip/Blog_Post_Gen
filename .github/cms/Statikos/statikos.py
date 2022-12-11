@@ -577,7 +577,7 @@ for file in getListOfFiles(dirName):
 ## Make folder for blog posts
 outputFolder = "pages/blog/"
 
-dirName = ".github/cms/blog_posts"
+dirName = ".github/cms/blog_posts/"
 
 ## succeeds even if directory does not exist.
 os.makedirs(outputFolder, exist_ok=True)
