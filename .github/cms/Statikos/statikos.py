@@ -449,16 +449,20 @@ except IOError:
 content = {}
 var = {}
 dirName = ".github/cms/pages"
-
 for file in getListOfFiles(dirName):
   with open(file, 'r') as f:
-    
-
+    file_contents = f.read()
+    file_contents = file_contents
+    try:
+      file_contents = file_contents.split("=================END OF SEO SETTINGS============",1)[1]
+    except:
+      pass
     for line in f:
         if ":" in line:
           name, value = line.split('=================END OF SEO SETTINGS============')[0].split(':')  # Needs replaced with regex match 
           var[name] = str(value).rstrip() # needs a value added    
     globals().update(var)
+
     try:
       blog_content = f.read().split("=================END OF SEO SETTINGS============",1)[1]    
     except:
@@ -592,13 +596,12 @@ for file in getListOfFiles(dirName):
 	
     ## Get input after 	(ERROR HERE)
     try:
-      blog_content = f.read().split("=================END OF SEO SETTINGS============",1)[1]    
+      Blog_Contents = f.read().split("=================END OF SEO SETTINGS============",1)[1]    
     except:
     # If no settings - get the whole file contents		
-      blog_content = f.read()
-    content['Blog_Content_Key'] = str(blog_content)
-    globals().update(content)
-   # file_contents = f.read()
+      Blog_Contents = f.read()
+	
+
     Facebook_Meta = ""
     BlogTitle = "Blog Post"
     # Write create date for blog post as default	
@@ -609,10 +612,7 @@ for file in getListOfFiles(dirName):
    
     data = var 
 
-    try:
-      Blog_Contents = content["Blog_Content_Key"]
-    except:
-      Blog_Contents = ""
+
 
 
     try:
