@@ -166,7 +166,7 @@ def creation_date(path_to_file, blog_date_format, hosted_on_github):
     """
 
     # Required for GitHub Hosted - file modification timestamp
-    if hosted_on_github == 'True':
+    if hosted_on_github == 'Trueee':
         Date = lastmod(path_to_file)
         Post_Time = datetime.datetime.strptime(Date, '%Y-%m-%dT%H:%M:%S%z').strftime(blog_date_format)
         return Post_Time
@@ -567,17 +567,12 @@ for file in getListOfFiles(dirName):
 #               BLOG                   #
 ########################################      
 
-
-########################################
-#               BLOG                   #
-########################################      
-
 # TODO - add a function to turn blog ON / OFF
 
 ## Make folder for blog posts
 outputFolder = "pages/blog/"
 
-dirName = ".github/cms/blog_posts/"
+dirName = ".github/cms/blog_posts"
 
 ## succeeds even if directory does not exist.
 os.makedirs(outputFolder, exist_ok=True)
@@ -717,6 +712,57 @@ try:
 except IOError:
     sys.exit('Blog index file template does not exist, or has no content.  Exiting')  
 
+
+## Create Blog Author Pages
+blog_author_template = env.get_template('blog-author.html')
+content = {}
+dirName = ".github/cms/blog_posts/author"
+outputFolder = "pages/blog/author/"
+os.makedirs(outputFolder, exist_ok=True)
+for file in getListOfFiles(dirName):
+  with open(file, 'r') as f:
+    
+
+    for line in f:
+# Check line for <meta name="robots" content="noindex">, etc
+        if re.search("<meta\s+name.+robots.+content.+noindex", line):
+	        robots_txt_disallow += Path(file).stem 
+        if ":" in line:
+          name, value = line.split('=================END OF SEO SETTINGS============')[0].split(':')  # Needs replaced with regex match 
+          var[name] = str(value).rstrip() # needs a value added    
+    globals().update(var)
+    try:
+      blog_content = f.read().split("=================END OF SEO SETTINGS============",1)[1]    
+    except:
+      blog_content = f.read()
+    content['Blog_Content_Key'] = str(blog_content)
+    globals().update(content)
+   # file_contents = f.read()
+    Facebook_Meta = ""
+    Facebook_Meta += """<meta property="og:title" content="Blog Post">"""
+    data = var 
+
+    try:
+      SiteTitle = data["SEO_Title"]
+    except:
+      SiteTitle = "Author Page"
+
+
+    try:
+      PageTitle = data["PageTitle"]
+    except:
+      PageTitle = "Author"
+
+    file_name = outputFolder + Path(file).stem + ".html"   
+    try:
+        with open(file_name, 'w') as fh:
+          output_from_parsed_template = blog_author_template.render(Site_Name=Site_Name,menu=menu,SiteTitle=SiteTitle,PageTitle=PageTitle,Facebook_Meta=Facebook_Meta,AssetPath=AssetPath,footer_contents=footer_contents)	
+          fh.write(output_from_parsed_template)
+	    
+    except IOError:
+        sys.exit(u'Unable to write to files: {0}'.format(file_contents))  
+    var.clear()
+    content.clear()
 
 ########################################
 #            End of Blog               #
@@ -980,68 +1026,12 @@ except Exceptation as e:
 #             Minify Assets            #
 ########################################    
 
-dirName= ".github/cms/layouts/assets"
-#dirName = ".github/cms/layouts/assets/js/"
 
-for file in getListOfFiles(dirName):
-  with open(file) as f:
-    ## These are used for below	
-    path=os.path.dirname(file)
-    print(f"Trying to minify {file}")
-    file_path = os.path.basename(path)	
-    ## Minify JS Files
-    FileSuffix = os.path.splitext(file)[1]
-    if FileSuffix == ".js":
-      js_file = f.read()
-      minified_js = jsmin(js_file)
-      if file_path == "assets":
-        JS_FileName = "assets/" +  Path(file).stem + ".min.js"
-      else:
-        JS_FileName = "assets/" + path.split("assets/")[1]  + "/" +  Path(file).stem + ".min.js"
-        print(JS_FileName)
-      JS_File = open(JS_FileName, "w")
-      JS_File.write(minified_js)
-      JS_File.close()
-    ## Minify CSS Files
-    if Path(file).suffix == ".css":
-      # Open file		
-      css_text = f.read()
-      f.close()
-      ## Send API request for minified CSS	
-      try:
-        r = requests.post("https://www.toptal.com/developers/cssminifier/api/raw", data={"input":css_text})
-        css_minified = r.text
-      except:
-        print(f"Could not minify {file}")
-     
-       ### Check if file path contains anything after /assets/  	   
-      if file_path == "assets":
-	      Output_Folder = "assets/" 
-      else:   
-	      ### File path contains something after /assets/ + adding path. 
-	      Output_Folder = "assets/" + path.split("assets/")[1]  + "/"
-      
-      file_name = Output_Folder + Path(file).stem + ".min.css"
-      CSS_File = open(file_name, "w")
-      CSS_File.write(css_minified)
-      CSS_File.close()
-    else:
-      ## Copy all files from .github/assets/ to /assets/	
-      ### Don't copy un-minified JS files
-      if FileSuffix == ".js":
-	      break
-      ### Don't copy un-minified CSS files
-      if FileSuffix == ".css":
-	      break
-      ### Copy & move all the other files to /assets/ folder. 
-      ### Check if file path contains anything after /assets/  	   
-      if file_path == "assets":
-	      print("hel")
-	      #Output_Folder = "assets/" + os.path.basename(file)
-      else:   
-	      ### File path contains something after /assets/ + adding path. 
-	      Output_Folder = "assets/" + path.split("assets/")[1]  + "/" + os.path.basename(file)
-      shutil.copyfile(file, Output_Folder)
+dirName = ".github/cms/layouts/assets/"
+
+for path, subdirs, files in os.walk(dirName):
+    for name in files:
+        print(os.path.join(path, name))
 
 ## Optimize all images in assets path
 command = """optimize-images ./assets/"""
