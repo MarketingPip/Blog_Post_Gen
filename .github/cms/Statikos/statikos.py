@@ -567,6 +567,11 @@ for file in getListOfFiles(dirName):
 #               BLOG                   #
 ########################################      
 
+
+########################################
+#               BLOG                   #
+########################################      
+
 # TODO - add a function to turn blog ON / OFF
 
 ## Make folder for blog posts
@@ -606,7 +611,7 @@ for file in getListOfFiles(dirName):
     except:
     # If no settings - get the whole file contents		
       blog_content = f.read()
-    content['Blog_Content_Key'] = blog_content
+    content['Blog_Content_Key'] = str(blog_content)
     globals().update(content)
    # file_contents = f.read()
     Facebook_Meta = ""
@@ -620,14 +625,13 @@ for file in getListOfFiles(dirName):
     data = var 
 
     try:
-      Blog_Contents = content['Blog_Content_Key']
+      Blog_Contents = content["Blog_Content_Key"]
     except:
       Blog_Contents = ""
 
 
     try:
-      Robots_Index = data["Robots"]
-      print("Working..", Robots_Index)
+      Robots_Index = data["Robots_Index"]
       if Robots_Index == "False":
         robots_txt_disallow += "User-agent: *\nDisallow:" + outputFolder + Path(file).stem 
     except:
@@ -713,54 +717,6 @@ try:
 except IOError:
     sys.exit('Blog index file template does not exist, or has no content.  Exiting')  
 
-
-## Create Blog Author Pages
-blog_author_template = env.get_template('blog-author.html')
-content = {}
-dirName = ".github/cms/blog_posts/author"
-outputFolder = "pages/blog/author/"
-os.makedirs(outputFolder, exist_ok=True)
-for file in getListOfFiles(dirName):
-  with open(file, 'r') as f:
-    
-
-    for line in f:
-        if ":" in line:
-          name, value = line.split('=================END OF SEO SETTINGS============')[0].split(':')  # Needs replaced with regex match 
-          var[name] = str(value).rstrip() # needs a value added    
-    globals().update(var)
-    try:
-      blog_content = f.read().split("=================END OF SEO SETTINGS============",1)[1]    
-    except:
-      blog_content = f.read()
-    content['Blog_Content_Key'] = str(blog_content)
-    globals().update(content)
-   # file_contents = f.read()
-    Facebook_Meta = ""
-    Facebook_Meta += """<meta property="og:title" content="Blog Post">"""
-    data = var 
-
-    try:
-      SiteTitle = data["SEO_Title"]
-    except:
-      SiteTitle = "Author Page"
-
-
-    try:
-      PageTitle = data["PageTitle"]
-    except:
-      PageTitle = "Author"
-
-    file_name = outputFolder + Path(file).stem + ".html"   
-    try:
-        with open(file_name, 'w') as fh:
-          output_from_parsed_template = blog_author_template.render(Site_Name=Site_Name,menu=menu,SiteTitle=SiteTitle,PageTitle=PageTitle,Facebook_Meta=Facebook_Meta,AssetPath=AssetPath,footer_contents=footer_contents)	
-          fh.write(output_from_parsed_template)
-	    
-    except IOError:
-        sys.exit(u'Unable to write to files: {0}'.format(file_contents))  
-    var.clear()
-    content.clear()
 
 ########################################
 #            End of Blog               #
