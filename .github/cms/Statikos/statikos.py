@@ -578,9 +578,6 @@ blog_post_template = env.get_template('blog-post.html')
 content = {}
 for file in getListOfFiles(dirName):
   with open(file, 'r') as f:
-    file_contents = f.read()
-    file_contents = file_contents
-    Blog_Contents = ""
     if "/author/" in file:
       break
     for line in f:
@@ -596,6 +593,9 @@ for file in getListOfFiles(dirName):
           var[name] = str(value).rstrip() # needs a value added    
     globals().update(var)
     
+    file_contents = f.read()
+    file_contents = file_contents
+    Blog_Contents = ""
 	
     ## Get input after 	(ERROR HERE)
     try:
