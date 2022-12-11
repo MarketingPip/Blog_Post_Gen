@@ -67,7 +67,7 @@ page_slugs = ""
 
 ## Function to get all files in directory & sub-folders
 
-def getListOfFiles(dirName):
+def getListOfFiles(directory):
     for root, dirs, files in os.walk(directory):
         for file in files:
             yield os.path.join(root, file)
