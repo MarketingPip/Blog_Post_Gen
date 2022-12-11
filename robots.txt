@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:pages/blog/time_test2User-agent: *
+Disallow:pages/blog/time_test
