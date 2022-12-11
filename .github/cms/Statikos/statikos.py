@@ -578,6 +578,9 @@ blog_post_template = env.get_template('blog-post.html')
 content = {}
 for file in getListOfFiles(dirName):
   with open(file, 'r') as f:
+    file_contents = f.read()
+    file_contents = file_contents
+    Blog_Contents = ""
     if "/author/" in file:
       break
     for line in f:
@@ -596,10 +599,10 @@ for file in getListOfFiles(dirName):
 	
     ## Get input after 	(ERROR HERE)
     try:
-      Blog_Contents = f.read().split("=================END OF SEO SETTINGS============",1)[1]    
+      Blog_Contents = file_contents.split("=================END OF SEO SETTINGS============",1)[1]    
     except:
     # If no settings - get the whole file contents		
-      Blog_Contents = f.read()
+      Blog_Contents = file_contents
 	
 
     Facebook_Meta = ""
